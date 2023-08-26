@@ -73,9 +73,7 @@ def run_excel(f_path, f_name):
 
     """Determine number of unique TestCondition1 values"""
     last_r = ws1.UsedRange.Rows.Count
-    column_values = set()
-    for x in range(2, last_r + 1, 1):
-        column_values.add(ws1.Range(f'N{x}').Value)
+    column_values = {ws1.Range(f'N{x}').Value for x in range(2, last_r + 1, 1)}
     unique_test_conditions = len(column_values)
 
     worksheet_name2 = 'Average_of_Max'
@@ -157,11 +155,7 @@ def ev_report_table(excel, wb, ws1, ws3, row_list):
 
         ws1.Activate()  # set the worksheet to be filtered as active
 
-        if i % 2 == 0:
-            col_select = [14, 'Q1']
-        else:
-            col_select = [19, 'V1']
-
+        col_select = [14, 'Q1'] if i % 2 == 0 else [19, 'V1']
         ws1.UsedRange.AutoFilter(col_select[0])  # remove column filter (set to all)
         ws1.UsedRange.AutoFilter(col_select[0], test_condition)  # set specific Column filter
         ws1.Range(col_select[1]).End(win32c.xlDown).Select()  # select last cell in the I_Tol column (Q or V)
@@ -235,7 +229,7 @@ def ev_report_table(excel, wb, ws1, ws3, row_list):
 
     '''Boarders for top row'''
     for k, v in border_types.items():
-        ws4.Range(f'B2:G2').Select()
+        ws4.Range('B2:G2').Select()
         excel.Selection.Borders(k).Weight = win32c.xlMedium
 
 
